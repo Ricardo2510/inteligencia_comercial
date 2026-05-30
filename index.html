@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — Inteligência Comercial Hidráulica</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">◈</div>
+        <div>
+          <strong>Market Lens</strong>
+          <span>Pesquisa comercial</span>
+        </div>
+      </div>
+
+      <section class="profile-card">
+        <div class="profile-avatar">IC</div>
+        <div>
+          <strong>Inteligência de Mercado</strong>
+          <span>Hidráulica • Benchmark</span>
+        </div>
+      </section>
+
+      <nav class="nav">
+        <a class="nav-item active" href="#resumo"><span>▣</span> Resumo</a>
+        <a class="nav-item" href="#precos"><span>⌁</span> Preços</a>
+        <a class="nav-item" href="#lojas"><span>◫</span> Lojas</a>
+        <a class="nav-item" href="#blukit"><span>◎</span> Blukit</a>
+        <a class="nav-item" href="#heatmap"><span>▦</span> Heatmap</a>
+        <a class="nav-item" href="#base"><span>▤</span> Base analítica</a>
+      </nav>
+
+      <section class="sidebar-metric">
+        <span>Qualidade média</span>
+        <strong id="sideQuality">—</strong>
+        <small>Ofertas A/B sobre a amostra filtrada</small>
+      </section>
+
+      <section class="sidebar-note">
+        <span class="dot"></span>
+        <div>
+          <strong>Base local</strong>
+          <p>Dashboard autônomo. Abra este arquivo diretamente no navegador.</p>
+        </div>
+      </section>
+    </aside>
+
+    <main class="dashboard">
+      <header class="topbar" id="resumo">
+        <div>
+          <p class="eyebrow">Dashboard comercial</p>
+          <h1>Inteligência de preços e fornecedores</h1>
+          <p class="subtitle">Leitura executiva da pesquisa hidráulica: preço, dispersão, comparabilidade e posicionamento de varejo.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn ghost" id="resetFilters">Limpar filtros</button>
+          <button class="btn" id="exportCsv">Exportar visão</button>
+        </div>
+      </header>
+
+      <section class="filter-strip glass">
+        <div class="filter-label"><span>Filtros</span><small id="resultLabel">—</small></div>
+        <label>Item<select id="filterItem"></select></label>
+        <label>Loja<select id="filterStore"></select></label>
+        <label>Marca<select id="filterBrand"></select></label>
+        <label>Nível<select id="filterLevel"></select></label>
+        <label>Comparab.<select id="filterComp"></select></label>
+        <label class="search-field">Busca<input id="filterSearch" placeholder="marca, item, loja..." /></label>
+      </section>
+
+      <section class="kpi-grid">
+        <article class="kpi glass accent-cyan"><span>Ofertas</span><strong id="kpiOffers">—</strong><small>observações filtradas</small></article>
+        <article class="kpi glass accent-purple"><span>Lojas</span><strong id="kpiStores">—</strong><small>canais mapeados</small></article>
+        <article class="kpi glass accent-green"><span>Marcas</span><strong id="kpiBrands">—</strong><small>fornecedores vistos</small></article>
+        <article class="kpi glass accent-orange"><span>Preço mediano</span><strong id="kpiMedian">—</strong><small>centro comercial</small></article>
+        <article class="kpi glass accent-pink"><span>Comparabilidade A/B</span><strong id="kpiQuality">—</strong><small>amostra mais útil</small></article>
+      </section>
+
+      <section class="dashboard-grid primary-grid" id="precos">
+        <article class="panel glass span-8">
+          <div class="panel-head">
+            <div>
+              <h2>Faixa de preço por item</h2>
+              <p>Mínimo, mediana e máximo por item normalizado</p>
+            </div>
+            <div class="legend"><i class="min"></i>Mín. <i class="median"></i>Mediana <i class="max"></i>Máx.</div>
+          </div>
+          <div class="chart-area line-chart" id="priceRangeChart"></div>
+        </article>
+
+        <article class="panel glass span-4">
+          <div class="panel-head compact">
+            <div>
+              <h2>Comparabilidade</h2>
+              <p>Qualidade da amostra</p>
+            </div>
+          </div>
+          <div class="donut-wrap">
+            <div class="donut" id="qualityDonut"><div><strong id="donutCenter">—</strong><span>A/B</span></div></div>
+            <div class="donut-legend" id="qualityLegend"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-grid secondary-grid" id="lojas">
+        <article class="panel glass span-4">
+          <div class="panel-head compact"><div><h2>Maior dispersão</h2><p>Amplitude de preço por item</p></div></div>
+          <div class="chart-area bar-chart" id="amplitudeBars"></div>
+        </article>
+
+        <article class="panel glass span-4">
+          <div class="panel-head compact"><div><h2>Lojas vs mercado</h2><p>Índice do preço médio</p></div></div>
+          <div class="chart-area bar-chart" id="storeIndexBars"></div>
+        </article>
+
+        <article class="panel glass span-4">
+          <div class="panel-head compact"><div><h2>Mix de produto</h2><p>Distribuição por nível</p></div></div>
+          <div class="mix-list" id="levelMix"></div>
+          <div class="insight-mini" id="levelInsight">—</div>
+        </article>
+      </section>
+
+
+      <section class="dashboard-grid blukit-grid" id="blukit">
+        <article class="panel glass span-8">
+          <div class="panel-head">
+            <div>
+              <h2>Blukit × mercado por item</h2>
+              <p>Preço de referência Blukit comparado à mediana observada do mercado</p>
+            </div>
+          </div>
+          <div class="scenario-compare" id="blukitReferenceCompare"></div>
+        </article>
+
+        <article class="panel glass span-4">
+          <div class="panel-head compact">
+            <div>
+              <h2>Referência Blukit</h2>
+              <p>Leitura direta dos preços mapeados</p>
+            </div>
+          </div>
+          <div class="blukit-kpis">
+            <div><span>Preço ref. Blukit</span><strong id="blukitRefMedian">—</strong></div>
+            <div><span>Mediana mercado</span><strong id="blukitMarketMedian">—</strong></div>
+            <div><span>Itens com ref.</span><strong id="blukitCoverage">—</strong></div>
+            <div><span>Ofertas Blukit</span><strong id="blukitOfferCount">—</strong></div>
+          </div>
+          <p class="scenario-note">Valores de referência baseados nas ofertas Blukit incluídas na pesquisa atual.</p>
+        </article>
+      </section>
+
+      <section class="dashboard-grid heat-grid" id="heatmap">
+        <article class="panel glass span-8">
+          <div class="panel-head">
+            <div>
+              <h2 id="heatmapTitle">Heatmap por loja</h2>
+              <p id="heatmapSubtitle">Preço médio por loja × item para avaliar posicionamento</p>
+            </div>
+            <div class="view-toggle" aria-label="Alternar visão do heatmap">
+              <button class="toggle active" id="heatModeStore" type="button">Loja</button>
+              <button class="toggle" id="heatModeBrand" type="button">Marca</button>
+            </div>
+          </div>
+          <div class="heatmap-wrap" id="heatmapTable"></div>
+        </article>
+
+        <article class="panel glass span-4">
+          <div class="panel-head compact"><div><h2>Radar executivo</h2><p>Insights automáticos da seleção</p></div></div>
+          <div class="insights-list">
+            <div class="insight-item"><span>↗</span><div><strong id="insightDispersion">—</strong><p id="insightDispersionText">—</p></div></div>
+            <div class="insight-item"><span>◉</span><div><strong id="insightStore">—</strong><p id="insightStoreText">—</p></div></div>
+            <div class="insight-item"><span>✓</span><div><strong id="insightQuality">—</strong><p id="insightQualityText">—</p></div></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel glass table-panel" id="base">
+        <div class="panel-head table-head">
+          <div>
+            <h2>Base analítica de ofertas</h2>
+            <p>Auditoria de item, loja, marca, especificação, preço e comparabilidade</p>
+          </div>
+          <input id="tableSearch" class="table-search" placeholder="Filtrar tabela exibida..." />
+        </div>
+        <div class="table-meta"><strong id="tableCount">—</strong><span>Use os filtros no topo para recalcular todo o dashboard.</span></div>
+        <div class="table-scroll"><table id="offersTable"></table></div>
+      </section>
+
+      <footer class="footer-note">Dashboard local • Dados da pesquisa comercial hidráulica • Visual inspirado em interfaces executivas de monitoramento.</footer>
+    </main>
+  </div>
+  <div id="offerTooltip" class="offer-tooltip" aria-hidden="true"></div>
+  <script src="assets/data.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
